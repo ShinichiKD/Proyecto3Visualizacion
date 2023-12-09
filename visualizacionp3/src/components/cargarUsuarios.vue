@@ -63,10 +63,14 @@ export default {
 
 
         manejarCambioArchivo(event) {
+            
             const file = event.target.files[0];
+           
             
             this.estadoBoton = true
             if (file) {
+                this.mostrados = []
+                this.datosvalidos = []
                 const reader = new FileReader();
 
                 reader.onload = (e) => {

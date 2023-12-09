@@ -2,11 +2,11 @@
     <div class="w-full h-full bg-slate-400 flex flex-col ">
 
         <div id="tester" class="h-[90vh] w-full">
-            
-               
-          
+
+
+
         </div>
-        
+
         <div class="h-[10vh]  w-full  flex bg-blue-500 text-white">
             <div class="h-full w-[30vh]  flex items-center p-4">
 
@@ -14,17 +14,17 @@
                     item-value="nombre" label="Graficos disponibles" return-object class=" w-full">
                 </v-select>
             </div>
-            <div class="h-full w-full  flex items-center gap-4 ">
+            <div class="h-full w-full  flex items-center gap-4 mr-4">
 
 
-                
+
                 <v-select v-model="valueCajero" multiple v-if="valueOpciones.opcion === 5" :items="cajeros"
-                    item-title="nombre" item-value="nombre" return-object label="Cajeros">
+                    item-title="nombre" item-value="nombre" return-object label="Cajeros(1 a 4)">
                 </v-select>
 
                 <v-select v-model="valueMedico" v-if="valueOpciones.opcion === 1 ||
                     valueOpciones.opcion === 2" :multiple="doctoresMultiple" :items="doctores" item-title="nombre"
-                    item-value="nombre" return-object label="Doctores">
+                    item-value="nombre" return-object :label="labelDoctores">
                 </v-select>
 
                 <v-select v-model="valueMes" v-if="valueOpciones.opcion === 1" :items="meses" label="Meses">
@@ -44,14 +44,14 @@
 
                     " :items="Años" label="Años">
                 </v-select>
-
-                <v-btn v-if="valueOpciones.opcion === 1" :disabled="estadoBoton" @click="grafico1">graficar</v-btn>
-                <v-btn v-if="valueOpciones.opcion === 2" :disabled="estadoBoton" @click="grafico2">graficar</v-btn>
-                <v-btn v-if="valueOpciones.opcion === 3" :disabled="estadoBoton" @click="grafico3">graficar</v-btn>
-                <v-btn v-if="valueOpciones.opcion === 4" :disabled="estadoBoton" @click="grafico4">graficar</v-btn>
-                <v-btn v-if="valueOpciones.opcion === 5" :disabled="estadoBoton" @click="grafico5">graficar</v-btn>
-                <v-btn v-if="valueOpciones.opcion === 6" :disabled="estadoBoton" @click="grafico6">graficar</v-btn>
-                <v-btn v-if="valueOpciones.opcion === 7" :disabled="estadoBoton" @click="grafico7">graficar</v-btn>
+               
+                <v-btn  color="#002EE6" v-if="valueOpciones.opcion === 1" :disabled="estadoBoton" @click="grafico1">graficar</v-btn>
+                <v-btn  color="#002EE6" v-if="valueOpciones.opcion === 2" :disabled="estadoBoton" @click="grafico2">graficar</v-btn>
+                <v-btn  color="#002EE6" v-if="valueOpciones.opcion === 3" :disabled="estadoBoton" @click="grafico3">graficar</v-btn>
+                <v-btn  color="#002EE6" v-if="valueOpciones.opcion === 4" :disabled="estadoBoton" @click="grafico4">graficar</v-btn>
+                <v-btn  color="#002EE6" v-if="valueOpciones.opcion === 5" :disabled="estadoBoton" @click="grafico5">graficar</v-btn>
+                <v-btn  color="#002EE6" v-if="valueOpciones.opcion === 6" :disabled="estadoBoton" @click="grafico6">graficar</v-btn>
+                <v-btn  color="#002EE6" v-if="valueOpciones.opcion === 7" :disabled="estadoBoton" @click="grafico7">graficar</v-btn>
 
             </div>
 
@@ -62,7 +62,7 @@
 import API from '../api';
 
 import Plotly from 'plotly.js-dist-min'
-
+import Swal from 'sweetalert2'
 
 export default {
 
@@ -82,6 +82,7 @@ export default {
 
             ],
             doctoresMultiple: false,
+            labelDoctores: "Doctores",
             valueMedico: "",
             valueCajero: "",
             items: [],
@@ -160,6 +161,8 @@ export default {
                 type: 'pie',
                 labels: x,
                 values: y,
+                text: y.map(String),
+                textposition: 'auto',
 
 
             };
@@ -183,6 +186,8 @@ export default {
                 type: 'bar',
                 x: x,
                 y: y,
+                text: y.map(String),
+                textposition: 'auto',
                 marker: {
                     color: color,
                     line: {
@@ -228,8 +233,9 @@ export default {
             } else {
                 valido = true
             }
-            this.estadoBoton = true
+
             if (valido) {
+                this.estadoBoton = true
                 await API.getMedicoPrevision(this.valueMedico, this.valueMes, this.valueAño, this.valuePrevision)
                     .then((response) => {
                         console.log(response);
@@ -244,6 +250,14 @@ export default {
                     }).catch((error) => {
                         console.log(error);
                     });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "No puedes realizar esta acción",
+
+
+                });
             }
         }, async grafico3() {
             this.estadoBoton = true
@@ -289,8 +303,9 @@ export default {
             } else {
                 valido = true
             }
-            this.estadoBoton = true
+
             if (valido) {
+                this.estadoBoton = true
                 await API.getTransaccionesCajeros(this.valueCajero, this.valueTrimestre, this.valueAño)
                     .then((response) => {
 
@@ -304,6 +319,14 @@ export default {
                     }).catch((error) => {
                         console.log(error);
                     });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "No puedes realizar esta acción",
+
+
+                });
             }
         }, async grafico6() {
             this.estadoBoton = true
@@ -312,7 +335,7 @@ export default {
                     console.log(response);
                     this.transacciones = response
 
-                    this.rellenarGraficoTorta(this.Años, response,
+                    this.rellenarGraficoTorta(response.años, response.conteos,
                         "Transacciones por año"
                     )
 
@@ -327,7 +350,7 @@ export default {
                 .then((response) => {
 
                     this.rellenarGraficoTorta(response.pagocon, response.conteos,
-                    
+
                         "Transacciones por medio de pago año " + this.valueAño)
 
 
@@ -340,13 +363,6 @@ export default {
         }
 
     }, watch: {
-        /* async value(newVal, oldVal) {
-
-            console.log(newVal)
-
-
-
-        } */
         valueMedico(newVal, oldVal) {
 
             console.log(newVal)
@@ -356,15 +372,18 @@ export default {
 
         },
         valueOpciones(nuevo, antiguo) {
-            console.log(nuevo)
+            Plotly.newPlot('tester', []);
+
             if (nuevo.opcion == 1) {
-
+                this.valueMedico = this.doctores[0]
+                this.labelDoctores = "Doctores"
                 this.doctoresMultiple = false
-            } else
+            } else {
                 if (nuevo.opcion == 2) {
-
+                    this.labelDoctores = "Doctores (1 a 4)"
                     this.doctoresMultiple = true
                 }
+            }
         }
 
     },

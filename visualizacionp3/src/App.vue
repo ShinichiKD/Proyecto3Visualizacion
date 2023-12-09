@@ -38,7 +38,7 @@ export default {
 
 <template>
   <div class="h-full w-full flex ">
-    <div class="bg-[#4063E5] w-1/6 h-full">
+    <div class="bg-blue-500 w-1/6 h-full">
       <sidebar @seleccionarMenu="cambioMenu"></sidebar>
     </div>
     <div class="w-full h-ful">

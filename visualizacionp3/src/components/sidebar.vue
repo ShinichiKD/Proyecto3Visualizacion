@@ -2,20 +2,20 @@
     <div class="flex flex-col h-screen gap-2">
 
         <div class="bg-[#002EE6] h-[40px] rounded-xl gap-2 text-white flex justify-center p-2 m-4
-         hover:bg-blue-500 hover:transition-colors" @click="seleccionarMenu('Tablas')">
+         hover:bg-blue-900 hover:transition-colors" @click="seleccionarMenu('Tablas')">
             <span>Tablas</span>
             <v-icon end icon="mdi-table mdi-36px"></v-icon>
         </div>
 
         <div class="bg-[#002EE6] h-[40px] rounded-xl gap-2 text-white flex justify-center p-2 m-4
-         hover:bg-blue-500 hover:transition-colors" @click="seleccionarMenu('Graficos')">
+         hover:bg-blue-900 hover:transition-colors" @click="seleccionarMenu('Graficos')">
             <span>Graficos</span>
             <v-icon end icon="mdi-chart-bar mdi-36px"></v-icon>
         </div>
         
         <div class="bg-[#002EE6] h-[40px] rounded-xl gap-2 text-white flex justify-center p-2 m-4
-         hover:bg-blue-500 hover:transition-colors" @click="seleccionarMenu('Cargar')">
-            <span>Cargar</span>
+         hover:bg-blue-900 hover:transition-colors" @click="seleccionarMenu('Cargar')">
+            <span>Cargar usuarios</span>
             <v-icon end icon="mdi-file-upload mdi-36px"></v-icon>
         </div>
 

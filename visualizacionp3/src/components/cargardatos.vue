@@ -15,7 +15,8 @@
         </div>
         <div class="h-[10vh] flex flex-row  gap-6 p-4 bg-blue-500 w-full text-white">
             <div class="w-[300px]">
-                <v-file-input label="File input" @change="manejarCambioArchivo"></v-file-input>
+                <v-file-input show-size label="File input" accept=".csv" @change="manejarCambioArchivo">
+                </v-file-input>
             </div>
             <div class="w-[300px] ml-3">
                 <v-select v-model="value" :items="items" label="Tipo de datos"></v-select>
@@ -24,6 +25,16 @@
                 <v-btn :disabled="estadoBoton" @click="addConsultas">Guardar</v-btn>
             </div>
         </div>
+        <v-dialog v-model="dialog" width="auto">
+            <v-card>
+                <v-card-text>
+                    Se han agregado correctamente {{agregadas}} consultas y {{malas}} consultas no se han podido agregar porque ya existen.
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="primary" block @click="dialog = false">Cerrar</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script>
@@ -35,6 +46,7 @@ export default {
         return {
             csv: null,
             errors: null,
+            dialog: false,
             encabezado: [
                 { title: "id", key: "id" },
                 { title: "usuario", key: "usuario" },
@@ -60,6 +72,8 @@ export default {
             ],
             datosvalidos: [],
             datosInvalidos: [],
+            agregadas:0,
+            malas:0,
             items: [
                 'validos',
                 'invalidos',
@@ -81,6 +95,7 @@ export default {
     watch: {
         async value(newVal, oldVal) {
             this.estadoBoton = true
+            
             if (newVal == "validos") {
                 this.mostrados = this.datosvalidos
 
@@ -88,7 +103,8 @@ export default {
 
                 await API.getConsultas()
                     .then((response) => {
-                        console.log("consultas", response)
+                        
+                       
                         this.mostrados = response
 
                     }).catch((error) => {
@@ -112,6 +128,9 @@ export default {
             await API.addConsultas({ consultas: this.datosvalidos })
                 .then((response) => {
                     console.log("consultas Añadidas", response)
+                    this.agregadas = response.agregadas
+                    this.malas = response.malas
+                    this.dialog = true
                     this.estadoBoton = false
                 }).catch((error) => {
                     console.log(error)
@@ -130,10 +149,14 @@ export default {
 
 
         manejarCambioArchivo(event) {
+            
             const file = event.target.files[0];
+            this.datosvalidos = []
+            this.datosInvalidos = []
+            this.mostrados = []
 
-            this.estadoBoton = true
             if (file) {
+                this.estadoBoton = true
                 const reader = new FileReader();
 
                 reader.onload = (e) => {
@@ -184,9 +207,7 @@ export default {
             if (!Number.isNaN(+consulta.id) && this.validarRUT(consulta.usuario) && this.validarFormatoFechaHora(consulta.fecha)
                 && this.validarFormatoHora(consulta.hora) && this.validarFormatoFechaHora(consulta.fechahora) && this.validarRUT(consulta.rutmedico)
                 && this.validarPrevision(consulta.prevision) && this.validarMedioPago(consulta.pagacon) && !Number.isNaN(+consulta.monto) && this.ValidarTipoconsulta(consulta.tipoconsulta)) {
-                if (consulta.prevision == "") {
-                    consulta.prevision = "Sin prevision"
-                }
+
                 this.datosvalidos.push(consulta)
             } else {
                 this.datosInvalidos.push(consulta)
@@ -208,7 +229,7 @@ export default {
             return !isNaN(fecha.getTime()) && fecha instanceof Date;
         }, validarPrevision(prevision) {
 
-            if (prevision == 'Fonasa' || prevision == 'Particular' || prevision == 'Isapre' || prevision == 'Prevision' || prevision == '') {
+            if (prevision == 'Fonasa' || prevision == 'Particular' || prevision == 'Isapre') {
                 return true;
 
             } else {
