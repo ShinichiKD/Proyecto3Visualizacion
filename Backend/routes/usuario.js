@@ -22,21 +22,23 @@ router.post("/addUsuarios", async (req, res) => {
   const usuarios = req.body.usuarios;
   const agregados = [];
   const malos = [];
-  for (const element of usuarios) {
-    await usuarioSchema(element)
-      .save()
-      .then((result) => {
-        console.log("agregado correctamente");
-        agregados.push(result);
-      })
-      .catch((err) => {
-        malos.push(element);
-        console.log("error al agregar");
-        console.log(err);
-      });
+  var result
+  try {
+    result = await usuarioSchema.insertMany(usuarios, {
+      ordered: false,
+    });
+  } catch (error) {
+    result = error;
   }
+  console.log("Se han guardado las consultas");
+  if (result.insertedDocs !== undefined) {
+    result = result.insertedDocs;
+    
+  }
+  res.json({ usuariosAgregados: result.length, usuariosMal: usuarios.length - result.length });
+
   
-  res.json({ usuariosAgregados: agregados.length, usuariosMal: malos.length });
+ 
 });
 
 router.get("/getMedicos", async (req, res) => {
@@ -76,7 +78,7 @@ router.get("/getTransaccionesCajeros/", async (req, res) => {
   else{
     rutCajeros.push(cajeros.rut);
   }
-
+  
   await usuarioSchema
     .find({ rut: { $in: rutCajeros } })
     .populate({ path: "consultas", match: { trimestre: trimestre, año: año } })

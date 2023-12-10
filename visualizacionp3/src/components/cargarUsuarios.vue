@@ -18,6 +18,17 @@
                 <v-btn :disabled="estadoBoton" @click="guardarUsuarios">Guardar</v-btn>
             </div>
         </div>
+        <v-dialog v-model="dialog" width="auto">
+            <v-card>
+                <v-card-text>
+                    Se han agregado correctamente {{ agregadas }} usuarios y {{ malas }} usuarios no se han podido agregar
+                    porque ya existen.
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="primary" block @click="dialog = false">Cerrar</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script>
@@ -28,10 +39,13 @@ export default {
     data() {
         return {
             csv: null,
-            value:"Cajero",
+            dialog: false,
+            agregadas: 0,
+            malas: 0,
+            value: "Cajero",
             encabezado: [
-                { title: "nombre", key: "nombre" },
-                { title: "rut", key: "rut" },
+                { title: "NOMBRE", key: "nombre" },
+                { title: "RUT", key: "rut" },
             ],
             paginas: [
                 { value: 10, title: '10' },
@@ -39,8 +53,8 @@ export default {
                 { value: 20, title: '20' },
                 { value: 25, title: '25' }
             ],
-            roles:["Cajero","Medico"],
-            datosvalidos:[],
+            roles: ["Cajero", "Medico"],
+            datosvalidos: [],
             estadoBoton: false,
         };
     },
@@ -48,8 +62,8 @@ export default {
 
     },
     watch: {
-        value(){
-            if(this.mostrados!=null){
+        value() {
+            if (this.mostrados != null) {
                 this.mostrados.forEach(element => {
                     element.rol = this.value
                 });
@@ -59,14 +73,14 @@ export default {
 
     },
     methods: {
-        
+
 
 
         manejarCambioArchivo(event) {
-            
+
             const file = event.target.files[0];
-           
-            
+
+
             this.estadoBoton = true
             if (file) {
                 this.mostrados = []
@@ -97,7 +111,7 @@ export default {
             const partes = linea.split(';') // Suponiendo que el separador es ';'
             /* 0=id - 1=usuario 2 fecha 3 hora 4 fechahora 6 tipoconsulta 7 rutmedico 9 prevision  16 paggacon 22 monto */
 
-           
+
 
             const consulta = {
                 rut: partes[0],
@@ -108,7 +122,7 @@ export default {
             console.log(consulta)
 
             if (this.validarRUT(consulta.rut) && consulta.nombre != "") {
-                
+
                 this.datosvalidos.push(consulta)
             } else {
                 this.datosInvalidos.push(consulta)
@@ -121,16 +135,19 @@ export default {
             const formatoValido = /^[0-9]+-[0-9K]$/.test(rutLimpio);
 
             return formatoValido;
-        },async guardarUsuarios(){
+        }, async guardarUsuarios() {
             this.estadoBoton = true
             await API.addUsuarios({ usuarios: this.mostrados })
-            .then((response) => {
-              console.log("usuarios Añadidas", response)
-              this.estadoBoton = false
-            }).catch((error) => {
-                this.estadoBoton = false
-              console.log(error)
-            })
+                .then((response) => {
+                    console.log("usuarios Añadidas", response)
+                    this.dialog = true
+                    this.agregadas = response.usuariosAgregados
+                    this.malas = response.usuariosMal
+                    this.estadoBoton = false
+                }).catch((error) => {
+                    this.estadoBoton = false
+                    console.log(error)
+                })
         }
     }
 
