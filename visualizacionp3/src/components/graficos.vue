@@ -265,8 +265,8 @@ export default {
                 .then((response) => {
 
                     console.log(response)
-                    this.rellenarGraficoTorta(response.prevision, response.conteos, ["#77ADDF", "#CB76E1", "#E0D259", "#95E18C"]
-                        , "Atenciones por prevision año " + this.valueAño
+                    this.rellenarGraficoTorta(response.prevision, response.conteos, 
+                         "Atenciones por prevision año " + this.valueAño
                     )
 
 

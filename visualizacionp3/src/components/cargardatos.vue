@@ -75,12 +75,12 @@ export default {
             agregadas:0,
             malas:0,
             items: [
-                'validos',
-                'invalidos',
-                'guardados'
+                'Validos',
+                'No validos',
+                'Guardados'
             ],
             mostrados: [],
-            value: "validos",
+            value: "Validos",
             cargandodatos: false,
             meses: [
                 "enero", "febrero", "marzo", "abril", "mayo", "junio",
@@ -96,10 +96,10 @@ export default {
         async value(newVal, oldVal) {
             this.estadoBoton = true
             
-            if (newVal == "validos") {
+            if (newVal == "Validos") {
                 this.mostrados = this.datosvalidos
 
-            } else if (newVal == "guardados") {
+            } else if (newVal == "Guardados") {
 
                 await API.getConsultas()
                     .then((response) => {
