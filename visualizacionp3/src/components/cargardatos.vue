@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-full flex flex-col items-center ">
-        <div class="text-center h-[2vh]">PREVISUALIZACION</div>
-        <div class="h-[88vh] ">
+        
+        <div class="h-[90vh] ">
 
             <v-data-table :headers="encabezado" :items="mostrados" :items-per-page="15" :items-per-page-options="paginas"
                 class="h-full items-center">
@@ -22,7 +22,7 @@
                 <v-select v-model="value" :items="items" label="Tipo de datos"></v-select>
             </div>
             <div>
-                <v-btn :disabled="estadoBoton" @click="addConsultas">Guardar</v-btn>
+                <v-btn  color="#002EE6" :disabled="estadoBoton" @click="addConsultas">Guardar</v-btn>
             </div>
         </div>
         <v-dialog v-model="dialog" width="auto">
@@ -39,7 +39,7 @@
 </template>
 <script>
 import API from '../api';
-
+import Swal from 'sweetalert2'
 export default {
 
     data() {
@@ -124,8 +124,10 @@ export default {
     },
     methods: {
         async addConsultas() {
-            this.estadoBoton = true
-            await API.addConsultas({ consultas: this.datosvalidos })
+            
+            if(this.csv != null){
+                this.estadoBoton = true
+                await API.addConsultas({ consultas: this.datosvalidos })
                 .then((response) => {
                     console.log("consultas Añadidas", response)
                     this.agregadas = response.agregadas
@@ -135,6 +137,16 @@ export default {
                 }).catch((error) => {
                     console.log(error)
                 })
+            }else{
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No se ha cargado ningun archivo',
+                   
+                  })
+            }
+            
         },
         parsearFecha(fecha) {
             const fechapartes = fecha.split(' ')

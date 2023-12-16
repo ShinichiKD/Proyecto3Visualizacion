@@ -58,6 +58,7 @@ router.get("/getConsultas", async (req, res) => {
   await consultaSchema
     .find()
     .then((result) => {
+      
       res.json(result);
     })
     .catch((err) => {

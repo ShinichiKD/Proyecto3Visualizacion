@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-full bg-blue-500 flex flex-col  text-white">
-        <div class="text-center h-[2vh]">PREVISUALIZACION</div>
-        <div class="h-[88vh] ">
+        
+        <div class="h-[90vh] ">
             <v-data-table :headers="encabezado" :items="mostrados" :items-per-page="15" :items-per-page-options="paginas"
                 loading-text="Loading... Please wait" class="h-full">
 
@@ -9,13 +9,13 @@
         </div>
         <div class="h-[10vh] flex flex-row gap-6 p-4">
             <div class="w-[300px]">
-                <v-file-input label="File input" @change="manejarCambioArchivo"></v-file-input>
+                <v-file-input accept=".csv" label="File input" @change="manejarCambioArchivo"></v-file-input>
             </div>
             <div class="w-[300px] ml-3">
                 <v-select v-model="value" :items="roles" label="rol"></v-select>
             </div>
             <div>
-                <v-btn :disabled="estadoBoton" @click="guardarUsuarios">Guardar</v-btn>
+                <v-btn color="#002EE6" :disabled="estadoBoton" @click="guardarUsuarios">Guardar</v-btn>
             </div>
         </div>
         <v-dialog v-model="dialog" width="auto">
@@ -33,7 +33,7 @@
 </template>
 <script>
 import API from '../api';
-
+import Swal from 'sweetalert2'
 export default {
 
     data() {
@@ -136,8 +136,11 @@ export default {
 
             return formatoValido;
         }, async guardarUsuarios() {
-            this.estadoBoton = true
-            await API.addUsuarios({ usuarios: this.mostrados })
+            
+            console.log(this.csv)
+            if(this.csv!=null){
+                this.estadoBoton = true
+                await API.addUsuarios({ usuarios: this.mostrados })
                 .then((response) => {
                     console.log("usuarios Añadidas", response)
                     this.dialog = true
@@ -148,6 +151,15 @@ export default {
                     this.estadoBoton = false
                     console.log(error)
                 })
+            }else{
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: 'No se ha cargado ningun archivo',
+
+
+                });
+            }
         }
     }
 
