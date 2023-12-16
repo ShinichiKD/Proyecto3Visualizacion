@@ -100,7 +100,7 @@ export default {
                 "2021", "2022", "2023"
             ],
             prevision: [
-                "Fonasa", "Particular", "Sin prevision"
+                "Fonasa", "Particular", "Isapre"
             ],
             valueAño: "2021",
             cajeros: [],
