@@ -216,7 +216,7 @@ export default {
                     this.dias = response.dias
                     this.montos = response.sumaMontosPorDia
                     this.rellenarGraficoBarras(this.dias, this.montos, "#C8A2C8", "Recaudaciones "
-                        + this.nombreMedico + " mes de " + this.valueMes + " año " + this.valueAño)
+                        + this.nombreMedico + " del mes de " + this.valueMes + " año " + this.valueAño)
                     this.estadoBoton = false
                 }).catch((error) => {
                     console.log(error);
@@ -246,7 +246,7 @@ export default {
                         console.log(this.nombres)
 
                         this.rellenarGraficoBarras(this.nombres, this.montos, ["#77ADDF", "#CB76E1", "#E0D259", "#95E18C"],
-                            "Recaudaciones " + this.valuePrevision + " " + this.valueMes + " año " + this.valueAño)
+                            "Recaudaciones " + this.valuePrevision + " del mes de " + this.valueMes + " para el año " + this.valueAño)
                         this.estadoBoton = false
                     }).catch((error) => {
                         console.log(error);

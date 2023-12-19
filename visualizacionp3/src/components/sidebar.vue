@@ -9,7 +9,7 @@
 
         <div class="bg-[#002EE6] h-[40px] rounded-xl gap-2 text-white flex justify-center p-2 m-4
          hover:bg-blue-900 hover:transition-colors" @click="seleccionarMenu('Graficos')">
-            <span>Graficos</span>
+            <span>Gráficos</span>
             <v-icon end icon="mdi-chart-bar mdi-36px"></v-icon>
         </div>
         
