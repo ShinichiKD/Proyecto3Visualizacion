@@ -27,7 +27,8 @@
                     item-value="nombre" return-object :label="labelDoctores">
                 </v-select>
 
-                <v-select v-model="valueMes" v-if="valueOpciones.opcion === 1" :items="meses" label="Meses">
+                <v-select v-model="valueMes" v-if="valueOpciones.opcion === 1 ||
+                    valueOpciones.opcion === 2" :items="meses" label="Meses">
                 </v-select>
                 <v-select v-if="valueOpciones.opcion === 5" v-model="valueTrimestre" :items="trimestre" label="Trimestres">
                 </v-select>
